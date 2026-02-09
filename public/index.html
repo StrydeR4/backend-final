@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sneaker Store</title>
+  <style>
+    body{font-family:Arial, sans-serif; max-width:1000px; margin:20px auto; padding:0 12px}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    input, select, button, textarea{padding:10px; border:1px solid #ccc; border-radius:8px}
+    button{cursor:pointer}
+    .card{border:1px solid #e5e5e5; border-radius:12px; padding:14px; margin:12px 0}
+    .muted{color:#666}
+    .top{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+    .danger{color:#b00020}
+    .ok{color:#0a7a2f}
+    textarea{width:100%; min-height:70px}
+    .small{font-size:12px}
+    a{color:#1a73e8; text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1>Sneaker Store</h1>
+    <div class="row">
+      <span id="who" class="muted">Not logged in</span>
+      <a id="adminLink" href="/admin.html" style="display:none">Admin Panel</a>
+      <button id="logoutBtn" style="display:none">Logout</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Auth</h3>
+    <div class="row">
+      <input id="email" placeholder="email" />
+      <input id="password" placeholder="password" type="password"/>
+      <button id="registerBtn">Register</button>
+      <button id="loginBtn">Login</button>
+    </div>
+    <div id="authMsg" class="small muted"></div>
+  </div>
+
+  <div class="card">
+    <div class="top">
+      <h2 style="margin:0">Products</h2>
+      <button id="refreshBtn">Refresh</button>
+    </div>
+    <div id="products"></div>
+  </div>
+
+  <script src="/app.js"></script>
+  <script>
+    window.PAGE = "index";
+    initIndex();
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin Panel</title>
+  <style>
+    body{font-family:Arial, sans-serif; max-width:1000px; margin:20px auto; padding:0 12px}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    input, select, button{padding:10px; border:1px solid #ccc; border-radius:8px}
+    button{cursor:pointer}
+    .card{border:1px solid #e5e5e5; border-radius:12px; padding:14px; margin:12px 0}
+    .muted{color:#666}
+    .danger{color:#b00020}
+    .ok{color:#0a7a2f}
+    a{color:#1a73e8; text-decoration:none}
+    a:hover{text-decoration:underline}
+    table{width:100%; border-collapse:collapse}
+    th, td{border-bottom:1px solid #eee; padding:10px; text-align:left; vertical-align:top}
+    th{background:#fafafa}
+    .small{font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="row" style="justify-content:space-between">
+    <h1>Admin Panel</h1>
+    <div class="row">
+      <a href="/">← Back to Store</a>
+      <span id="who" class="muted"></span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Add product</h3>
+    <div class="row">
+      <input id="pName" placeholder="Name" />
+      <input id="pBrand" placeholder="Brand" />
+      <input id="pPrice" placeholder="Price" type="number" />
+      <select id="pCategory">
+        <option value="lifestyle">lifestyle</option>
+        <option value="running">running</option>
+        <option value="basketball">basketball</option>
+        <option value="training">training</option>
+        <option value="other">other</option>
+      </select>
+      <input id="pMin" placeholder="Size min" type="number" />
+      <input id="pMax" placeholder="Size max" type="number" />
+      <button id="addProductBtn">Add</button>
+    </div>
+    <div id="adminMsg" class="small muted"></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h3 style="margin:0">Manage products</h3>
+      <button id="refreshBtn">Refresh</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Category / Sizes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <script src="/app.js"></script>
+  <script>
+    window.PAGE = "admin";
+    initAdmin();
+  </script>
+</body>
+</html>

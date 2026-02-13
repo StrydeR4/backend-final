@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNEAKRZ - Premium Sneaker Marketplace</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header {
+            background: white;
+            padding: 24px 0;
+            border-bottom: 1px solid #dee2e6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { 
+            font-size: 28px; 
+            font-weight: 700;
+            color: #2c3e50;
+            letter-spacing: -0.5px;
+        }
+        .user-info { display: flex; gap: 12px; align-items: center; }
+        .user-badge {
+            background: #e7f3ff;
+            color: #0066cc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .admin-badge { background: #fff4e6; color: #ff9800; }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        button:hover { 
+            background: #0052a3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,102,204,0.2);
+        }
+        button.danger { background: #ec4d63; }
+        button.danger:hover { background: #d43552; }
+        button.success { background: #00b56a; }
+        button.success:hover { background: #009455; }
+        .auth-section, .main-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+            color: #2c3e50;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+        }
+        textarea { resize: vertical; min-height: 100px; }
+        .tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid #dee2e6; }
+        .tab {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            text-align: center;
+        }
+        .tab.active { 
+            color: #0066cc;
+            border-bottom-color: #0066cc;
+        }
+        .tab:hover { color: #0066cc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .lots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .lot-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .lot-card:hover {
+            transform: translateY(-6px);
+            border-color: #0066cc;
+            box-shadow: 0 12px 24px rgba(0,102,204,0.15);
+        }
+        .lot-image-wrapper {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%);
+        }
+        .lot-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .lot-card:hover .lot-image {
+            transform: scale(1.08);
+        }
+        .lot-content {
+            padding: 20px;
+        }
+        .lot-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .lot-bid {
+            font-size: 26px;
+            color: #0066cc;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+        .lot-description {
+            color: #6c757d;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 13px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .lot-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+            padding: 12px 0;
+            border-top: 1px solid #f0f0f0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-active { background: #e7f3ff; color: #0066cc; }
+        .status-closed { background: #ffe7e7; color: #cc0000; }
+        .category-tag {
+            background: #f0f0f0;
+            color: #0066cc;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .countdown {
+            background: #fff4e6;
+            color: #ff9800;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .countdown.ending-soon {
+            background: #ffe7e7;
+            color: #cc0000;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .alert {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .alert-success {
+            background: #e7f3e7;
+            color: #00b56a;
+            border-left-color: #00b56a;
+        }
+        .alert-error {
+            background: #ffe7e7;
+            color: #cc0000;
+            border-left-color: #cc0000;
+        }
+        .hidden { display: none; }
+        .admin-controls, .user-controls {
+            margin-top: 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-controls button, .user-controls button {
+            font-size: 11px;
+            padding: 8px 14px;
+            flex: 1;
+            min-width: 100px;
+        }
+        .bid-section {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #dee2e6;
+        }
+        .bid-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .bid-input-group input {
+            flex: 1;
+        }
+        .bid-input-group button {
+            flex: 0 0 auto;
+            width: auto;
+        }
+        .bid-history {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .bid-item {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #6c757d;
+            border-left: 3px solid #0066cc;
+            border: 1px solid #dee2e6;
+        }
+        .winner-badge {
+            background: #fff4e6;
+            color: #ff9800;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 12px 0;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 12px;
+            border: 1px solid #dee2e6;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .modal-close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            font-weight: bold;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .modal-close:hover {
+            color: #0066cc;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+        h3 {
+            color: #0066cc;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #dee2e6;
+            margin: 30px 0;
+        }
+        .filter-controls {
+            margin: 25px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-controls select {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 SNEAKRZ</h1>
+            <div class="user-info" id="userInfo"></div>
+        </header>
+
+        <!-- AUTH SECTION -->
+        <div class="auth-section" id="authSection">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('login')">Sign In</button>
+                <button class="tab" onclick="switchTab('register')">Sign Up</button>
+            </div>
+
+            <div id="loginTab" class="tab-content active">
+                <h2>Welcome Back</h2>
+                <div id="loginMessage"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+
+            <div id="registerTab" class="tab-content">
+                <h2>Create Account</h2>
+                <div id="registerMessage"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required minlength="6">
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content hidden" id="mainContent">
+            <!-- ADMIN SECTION -->
+            <div id="adminSection" class="hidden">
+                <h2>➕ Add New Sneaker Drop (Admin)</h2>
+                <div id="lotMessage"></div>
+                <form id="lotForm">
+                    <div class="form-group">
+                        <label for="lotTitle">Sneaker Name</label>
+                        <input type="text" id="lotTitle" required placeholder="e.g. Nike Air Jordan 1 Retro">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotBrand">Brand</label>
+                        <select id="lotBrand" required>
+                            <option value="">-- Select Brand --</option>
+                            <option value="Nike">Nike</option>
+                            <option value="Adidas">Adidas</option>
+                            <option value="Jordan">Jordan</option>
+                            <option value="Puma">Puma</option>
+                            <option value="New Balance">New Balance</option>
+                            <option value="Reebok">Reebok</option>
+                            <option value="Vans">Vans</option>
+                            <option value="Converse">Converse</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotColorway">Colorway</label>
+                        <input type="text" id="lotColorway" required placeholder="e.g. Black and Gold">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotSize">Size</label>
+                        <input type="number" id="lotSize" required min="1" max="15" step="0.5" placeholder="e.g. 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotCondition">Condition</label>
+                        <select id="lotCondition" required>
+                            <option value="">-- Select Condition --</option>
+                            <option value="DS">DS (Deadstock)</option>
+                            <option value="VNDS">VNDS (Very Near Deadstock)</option>
+                            <option value="Lightly Worn">Lightly Worn</option>
+                            <option value="Well Worn">Well Worn</option>
+                            <option value="Used">Used</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotMaterial">Material</label>
+                        <input type="text" id="lotMaterial" required placeholder="e.g. Leather">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotYear">Year</label>
+                        <input type="number" id="lotYear" required min="2000" max="2100" placeholder="e.g. 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotBid">Price ($)</label>
+                        <input type="number" id="lotBid" required min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="lotDescription">Description</label>
+                        <textarea id="lotDescription" required placeholder="Detailed product description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotCategory">Sneaker Type</label>
+                        <select id="lotCategory">
+                            <option value="">-- Select Type --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lotImage">Product Image</label>
+                        <input type="text" id="lotImageUrl" placeholder="Image URL">
+                        <input type="file" id="lotImageFile" accept="image/*" style="margin-top: 10px;">
+                        <img id="imagePreview" class="image-preview hidden">
+                    </div>
+                    <button type="submit">Add Sneaker</button>
+                </form>
+
+                <hr>
+
+                <h2>➕ Add Sneaker Category (Admin)</h2>
+                <div id="categoryMessage"></div>
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" id="categoryName" required placeholder="e.g. Basketball, Casual, Running">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryDescription">Description</label>
+                        <textarea id="categoryDescription" placeholder="Details about this sneaker category..."></textarea>
+                    </div>
+                    <button type="submit">Add Category</button>
+                </form>
+            </div>
+
+            <h2 style="margin-top: 30px;">🔎 Sneaker Catalog</h2>
+
+            <div class="lots-grid" id="lotsList"></div>
+        </div>
+    </div>
+
+    <!-- BID MODAL -->
+    <div id="bidModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeBidModal()">&times;</span>
+            <h2 id="modalLotTitle"></h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' ||
+                            window.location.hostname === '::1';
+        
+        const API_URL = isLocalhost && window.location.port === '3000'
+            ? 'http://localhost:3000/api'
+            : '/api';
+        
+        console.log('API_URL:', API_URL);
+        console.log('Hostname:', window.location.hostname);
+        console.log('Port:', window.location.port);
+        
+        let currentUser = null;
+        let authToken = null;
+        let updateTimersInterval = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, checking auth...');
+            checkAuth();
+            setupEventListeners();
+        });
+
+        function checkAuth() {
+            authToken = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+
+            if (authToken && userData) {
+                currentUser = JSON.parse(userData);
+                showMainContent();
+            } else {
+                showAuthSection();
+            }
+        }
+
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    console.log('Login form submitted');
+                    handleLogin(e);
+                });
+            } else {
+                console.warn('loginForm not found');
+            }
+            
+            if (registerForm) {
+                registerForm.addEventListener('submit', (e) => {
+                    console.log('Register form submitted');
+                    handleRegister(e);
+                });
+            } else {
+                console.warn('registerForm not found');
+            }
+            
+            const lotForm = document.getElementById('lotForm');
+            if (lotForm) {
+                lotForm.addEventListener('submit', handleAddLot);
+            }
+            
+            const categoryForm = document.getElementById('categoryForm');
+            if (categoryForm) {
+                categoryForm.addEventListener('submit', handleAddCategory);
+            }
+            
+            // Image preview
+            const imageFile = document.getElementById('lotImageFile');
+            if (imageFile) {
+                imageFile.addEventListener('change', handleImageUpload);
+            }
+            
+            const imageUrl = document.getElementById('lotImageUrl');
+            if (imageUrl) {
+                imageUrl.addEventListener('input', handleImageUrl);
+            }
+            
+            console.log('Event listeners setup complete');
+        }
+
+        function switchTab(tab) {
+            console.log('Switching to tab:', tab);
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('loginTab').classList.add('active');
+                console.log('Login tab activated');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('registerTab').classList.add('active');
+                console.log('Register tab activated');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            console.log('Login attempt:', { email, apiUrl: API_URL });
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                console.log('Login response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Login response data:', data);
+
+                if (data.success) {
+                    authToken = data.data.token;
+                    currentUser = data.data.user;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('userData', JSON.stringify(currentUser));
+                    showMessage('loginMessage', '✅ Welcome to SNEAKRZ!', 'success');
+                    setTimeout(() => showMainContent(), 500);
+                } else {
+                    showMessage('loginMessage', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('loginMessage', '❌ Login failed: ' + error.message, 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            console.log('Register attempt:', { name, email, apiUrl: API_URL });
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                console.log('Register response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Register response data:', data);
+
+                if (data.success) {
+                    authToken = data.data.token;
+                    currentUser = data.data.user;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('userData', JSON.stringify(currentUser));
+                    showMessage('registerMessage', 'Registration successful!', 'success');
+                    setTimeout(() => showMainContent(), 500);
+                } else {
+                    showMessage('registerMessage', data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                showMessage('registerMessage', 'Registration failed: ' + error.message, 'error');
+            }
+        }
+        function handleLogout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            authToken = null;
+            currentUser = null;
+            if (updateTimersInterval) clearInterval(updateTimersInterval);
+            showAuthSection();
+        }
+
+        function showAuthSection() {
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+        }
+
+        function showMainContent() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+
+            const userInfoHTML = `
+                <span class="user-badge ${currentUser.role === 'admin' ? 'admin-badge' : ''}">
+                    ${currentUser.role === 'admin' ? '👑 Admin' : '👤 User'}: ${currentUser.name}
+                </span>
+                <button onclick="handleLogout()">Logout</button>
+            `;
+            document.getElementById('userInfo').innerHTML = userInfoHTML;
+
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminSection').classList.remove('hidden');
+            }
+
+            loadCategories();
+            loadLots();
+        }
+
+
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const select = document.getElementById('lotCategory');
+                    select.innerHTML = '<option value="">-- No Category --</option>';
+                    data.data.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat._id;
+                        option.textContent = cat.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        async function loadLots() {
+            try {
+                const response = await fetch(`${API_URL}/lots`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayLots(data.data);
+                }
+            } catch (error) {
+                console.error('Error loading lots:', error);
+            }
+        }
+
+        function displayLots(lots) {
+            const container = document.getElementById('lotsList');
+            
+            if (lots.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #aaa; font-size: 18px;">No sneakers available right now... Check back soon! 👟</p>';
+                return;
+            }
+
+            container.innerHTML = lots.map(lot => {
+                const imageUrl = lot.images && lot.images.length > 0 
+                    ? lot.images[0] 
+                    : 'https://via.placeholder.com/350x200?text=Sneaker';
+                
+                return `
+                    <div class="lot-card">
+                        <div class="lot-image-wrapper">
+                            <img src="${imageUrl}" class="lot-image" onerror="this.src='https://via.placeholder.com/350x200?text=Sneaker'">
+                        </div>
+                        <div class="lot-content">
+                            <div class="lot-title">${lot.title}</div>
+                            ${lot.category ? `<span class="category-tag">${lot.category.name}</span>` : ''}
+                            
+                            <div style="font-size: 12px; color: #666; margin: 8px 0;">
+                                ${lot.brand ? `<div><strong>Brand:</strong> ${lot.brand}</div>` : ''}
+                                ${lot.colorway ? `<div><strong>Colorway:</strong> ${lot.colorway}</div>` : ''}
+                                ${lot.size ? `<div><strong>Size:</strong> ${lot.size}</div>` : ''}
+                                ${lot.condition ? `<div><strong>Condition:</strong> ${lot.condition}</div>` : ''}
+                                ${lot.material ? `<div><strong>Material:</strong> ${lot.material}</div>` : ''}
+                                ${lot.year ? `<div><strong>Year:</strong> ${lot.year}</div>` : ''}
+                            </div>
+                            
+                            <div class="lot-bid" style="margin: 12px 0; font-size: 20px; font-weight: bold; color: #ff6600;">$${lot.startBid.toFixed(2)}</div>
+                            
+                            <div class="lot-description" style="font-size: 13px; color: #555; margin-bottom: 12px;">${lot.description}</div>
+                            
+                            ${currentUser && currentUser.role === 'admin' ? `
+                                <div class="admin-controls">
+                                    <button class="danger" onclick="deleteLot('${lot._id}')">Delete</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCountdowns() {
+            // Countdown removed - no longer an auction
+        }
+
+        function openBidModal(lotId, title, currentBid, bidIncrement) {
+            // Bidding removed - no longer an auction
+        }
+
+        function closeBidModal() {
+            document.getElementById('bidModal').classList.remove('show');
+        }
+
+
+
+
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = event.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleImageUrl(e) {
+            const url = e.target.value;
+            if (url) {
+                const preview = document.getElementById('imagePreview');
+                preview.src = url;
+                preview.classList.remove('hidden');
+            }
+        }
+
+        let isSubmittingLot = false;
+
+        async function handleAddLot(e) {
+            e.preventDefault();
+            
+            if (isSubmittingLot) {
+                return;
+            }
+
+            const images = [];
+            const imageUrl = document.getElementById('lotImageUrl').value;
+            const imageFile = document.getElementById('imagePreview').src;
+            
+            if (imageUrl) images.push(imageUrl);
+            else if (imageFile && !imageFile.includes('placeholder')) images.push(imageFile);
+
+            // Set endDate to 90 days from now (not used in display but required by backend)
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 90);
+
+            const lotData = {
+                title: document.getElementById('lotTitle').value,
+                brand: document.getElementById('lotBrand').value,
+                colorway: document.getElementById('lotColorway').value,
+                size: parseFloat(document.getElementById('lotSize').value),
+                condition: document.getElementById('lotCondition').value,
+                material: document.getElementById('lotMaterial').value,
+                year: parseInt(document.getElementById('lotYear').value),
+                startBid: parseFloat(document.getElementById('lotBid').value),
+                description: document.getElementById('lotDescription').value,
+                category: document.getElementById('lotCategory').value || undefined,
+                endDate: endDate.toISOString(),
+                bidIncrement: 1,
+                images: images
+            };
+
+            try {
+                isSubmittingLot = true;
+                const submitButton = document.querySelector('#lotForm button[type="submit"]');
+                submitButton.disabled = true;
+                
+                const response = await fetch(`${API_URL}/lots`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(lotData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('lotMessage', '✅ Sneaker added successfully!', 'success');
+                    document.getElementById('lotForm').reset();
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    loadLots();
+                } else {
+                    showMessage('lotMessage', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('lotMessage', '❌ Error adding sneaker: ' + error.message, 'error');
+            } finally {
+                isSubmittingLot = false;
+                const submitButton = document.querySelector('#lotForm button[type="submit"]');
+                submitButton.disabled = false;
+            }
+        }
+
+        let isSubmittingCategory = false;
+
+        async function handleAddCategory(e) {
+            e.preventDefault();
+            
+            // Защита от двойного клика
+            if (isSubmittingCategory) {
+                return;
+            }
+            
+            const categoryData = {
+                name: document.getElementById('categoryName').value,
+                description: document.getElementById('categoryDescription').value
+            };
+
+            try {
+                isSubmittingCategory = true;
+                const submitButton = document.querySelector('#categoryForm button[type="submit"]');
+                submitButton.disabled = true;
+                
+                const response = await fetch(`${API_URL}/categories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(categoryData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('categoryMessage', 'Category created successfully!', 'success');
+                    document.getElementById('categoryForm').reset();
+                    loadCategories();
+                } else {
+                    showMessage('categoryMessage', data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('categoryMessage', 'Error creating category: ' + error.message, 'error');
+            } finally {
+                isSubmittingCategory = false;
+                const submitButton = document.querySelector('#categoryForm button[type="submit"]');
+                submitButton.disabled = false;
+            }
+        }
+
+
+
+        async function deleteLot(id) {
+            if (!confirm('Are you sure you want to delete this lot?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/lots/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadLots();
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('Error deleting lot: ' + error.message);
+            }
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => element.innerHTML = '', 3000);
+        }
+    </script>
+</body>
+</html>
